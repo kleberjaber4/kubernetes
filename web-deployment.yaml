@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment # Zorgt voor aanmaken bij uitvoeren van script
+
+metadata:
+  name: web-deployment
+  labels:
+    app: web
+spec:
+  replicas: 3  # Aantal webservers (scaling)
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web-container # Naam van de container
+        image: nginx:latest  # Toewijzen van de image (in dit geval Nginx)
+        ports:
+        - containerPort: 80 # Poort waar de service op gaat (intern)
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  type: LoadBalancer  # Load balancer service
+  selector:
+    app: web
+  ports:
+    - protocol: TCP
+      port: 80 # Poort waar de service op gaat
+      targetPort: 80

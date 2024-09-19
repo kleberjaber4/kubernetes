@@ -1,0 +1,17 @@
+---
+- name: Deploy Kubernetes Pods
+  hosts: localhost
+  tasks:
+    - name: Apply db-deployment.yaml
+      k8s:
+        kubeconfig: ~/.kube/config
+        namespace: default
+        state: present
+        definition: "{{ lookup('file', 'db-deployment.yaml') }}"
+
+    - name: Apply web-deployment.yaml
+      k8s:
+        kubeconfig: ~/.kube/config
+        namespace: default
+        state: present
+        definition: "{{ lookup('file', 'web-deployment.yaml') }}"

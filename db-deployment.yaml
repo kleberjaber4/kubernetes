@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment # Zorgt voor aanmaken bij uitvoeren van script
+metadata:
+  name: mysql-deployment
+  labels:
+    app: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql-container # Naam van de container
+        image: mysql:5.7
+        ports:
+        - containerPort: 3306 # Poort waar de service op gaat (intern)
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: R@dez3br4ICT5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  type: ClusterIP  # Alleen binnen het cluster bereikbaar
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306 # Poort waar de service op gaat
+      targetPort: 3306
